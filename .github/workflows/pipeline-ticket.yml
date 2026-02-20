@@ -3,7 +3,7 @@ name: CI + Tg notifications # Name of the workflow
 on:
   pull_request:
     branches: [ "dev" ] # Event trigger: runs on pull requests to the main branch
-    types: [opened, synchronize, reopened] 
+    types: [opened, synchronize, reopened, ready_for_review] 
 
 jobs:
   lint-and-test: # проверка кода и тесты
@@ -49,6 +49,14 @@ jobs:
           env:
             TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} # передаем токен бота из секретов репозитория
             TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }} # передаем ID чата из секретов репозитория
+            PR_NUMBER: ${{ github.event.pull_request.number }}
+            PR_TITLE: ${{ github.event.pull_request.title }}
+            PR_URL: ${{ github.event.pull_request.html_url }}
+            PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+            PR_SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
+            PR_TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+            JOB_STATUS: ${{ job.status }}
+            RUN_ID: ${{ github.run_id }}
           run: |
             python -m pip install --upgrade pip
             pip install pyTelegramBotAPI
