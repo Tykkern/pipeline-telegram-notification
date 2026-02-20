@@ -19,12 +19,12 @@ bot = telebot.TeleBot(TOKEN)
 
 
 def send_notification():
-    pr_number = os.getenv("PR_NUMBER", "—")
+    pr_number = os.getenv("PR_NUMBER", "-")
     pr_title = os.getenv("PR_TITLE", "Тестовый запуск")
-    pr_url = os.getenv("PR_URL", "—")
+    pr_url = os.getenv("PR_URL", "-")
     pr_author = os.getenv("PR_AUTHOR", "неизвестен")
-    source_branch = os.getenv("PR_SOURCE_BRANCH", "—")
-    target_branch = os.getenv("PR_TARGET_BRANCH", "—")
+    source_branch = os.getenv("PR_SOURCE_BRANCH", "-")
+    target_branch = os.getenv("PR_TARGET_BRANCH", "-")
     job_status = os.getenv("JOB_STATUS", "unknown").upper()
     run_id = os.getenv("RUN_ID", "локальный")
 
@@ -35,7 +35,7 @@ def send_notification():
         f"*Новый Pull Request #{pr_number}*\n\n"
         f"**{pr_title}**\n"
         f"Автор: @{pr_author}\n"
-        f"Ветка: `{source_branch}` → `{target_branch}`\n"
+        f"Ветка: `{source_branch}` -> `{target_branch}`\n"
         f"Ссылка: {pr_url}\n\n"
         f"Статус проверки: **{status}**\n"
         f"Run ID: {run_id}\n"
