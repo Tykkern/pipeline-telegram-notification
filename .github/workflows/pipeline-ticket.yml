@@ -1,0 +1,55 @@
+name: CI + Tg notifications # Name of the workflow
+
+on:
+  pull_request:
+    branches: [ "dev" ] # Event trigger: runs on pull requests to the main branch
+    types: [opened, synchronize, reopened] 
+
+jobs:
+  lint-and-test: # проверка кода и тесты
+    runs-on: ubuntu-latest # запускается на последней версии Ubuntu
+    steps:
+      - name: checkout code # скачаиваем код репозитория в рабочую директорию
+        uses: actions/checkout@v4 
+
+      - name: set up python # установка нужной версии Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # версия Python для проекта
+
+      - name: Установка зависимостей # обновленеие pip и установка зависимостей из requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: проверка кода с помощью flake8 # проверка кода на соответствие стилю PEP 8
+        run: |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --max-complexity=10 --max-line-length=88 --statistics
+
+      - name: Сохранение результатов проверки кода
+        if: always() # сохраняем результаты проверки кода, даже если она не прошла
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake8-results
+          path: |
+            .github/workflows/*.yml
+
+  telegram_notification:
+    needs: lint-and-test # запуск после проверки кода 
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+        - name: Получение исходного кода для доступа к файлу bot.py
+          uses: actions/checkout@v4
+
+        - name: Отправка уведомления в тг
+          env:
+            BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} # передаем токен бота из секретов репозитория
+            CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }} # передаем ID чата из секретов репозитория
+          run: |
+            python -m pip install --upgrade pip
+            pip install python-telegram-bot==21.5
+            python bot.py
