@@ -6,6 +6,7 @@ load_dotenv()
 
 TOKEN = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(TOKEN)
+chat_id = os.getenv('CHAT_ID')
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -13,7 +14,7 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: True)
 def echo_all(message):
-    bot.send_message(message.chat.id, f"Ты написал: {message.text}")
+    bot.send_message(chat_id, f"Ты написал: {message.text}")
 
 if __name__ == '__main__':
     print("Бот запущен...")
