@@ -7,11 +7,11 @@ TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 if not TOKEN:
-    print("ОШИБКА: TELEGRAM_BOT_TOKEN не задан в GitHub Secrets")
+    print("ОШИБКА: TELEGRAM_BOT_TOKEN не задан")
     sys.exit(1)
 
 if not CHAT_ID:
-    print("ОШИБКА: TELEGRAM_CHAT_ID не задан в GitHub Secrets")
+    print("ОШИБКА: TELEGRAM_CHAT_ID не задан")
     sys.exit(1)
 
 
@@ -25,11 +25,11 @@ def send_notification(message: str):
             text=message,
             parse_mode="Markdown"
         )
-        print(f"ПОБЕДА: сообщение отправлено в чат {CHAT_ID}")
-        print(f"Текст сообщения:\n{message}")
+        print("ПОБЕДА: сообщение отправлено")
+        print(f"Текст:\n{message}")
         return True
     except Exception as e:
-        print(f"НЕ ПОБЕДА при отправке: {str(e)}")
+        print(f"НЕ ПОБЕДА: {str(e)}")
         return False
 
 

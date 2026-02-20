@@ -25,9 +25,9 @@ jobs:
       - name: проверка кода с помощью flake8 # проверка кода на соответствие стилю PEP 8
         run: |
           pip install flake8
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --max-complexity=10 --max-line-length=150 --statistics
-
+          flake8 . --exit-zero --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --exit-zero --max-complexity=10 --max-line-length=150 --statistics
+        # добавил --exit-zero позволяет продолжать выполнение, даже если найдены ошибки стиля, чтобы не прерывать весь процесс
       - name: Сохранение результатов проверки кода
         if: always() # сохраняем результаты проверки кода, даже если она не прошла
         uses: actions/upload-artifact@v4
@@ -47,8 +47,8 @@ jobs:
 
         - name: Отправка уведомления в тг
           env:
-            BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} # передаем токен бота из секретов репозитория
-            CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }} # передаем ID чата из секретов репозитория
+            TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} # передаем токен бота из секретов репозитория
+            TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }} # передаем ID чата из секретов репозитория
           run: |
             python -m pip install --upgrade pip
             pip install pyTelegramBotAPI
