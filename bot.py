@@ -29,7 +29,6 @@ def send_notification():
     run_id = os.getenv("RUN_ID", "локальный")
 
     status = "Успешно" if job_status == "SUCCESS" else "Ошибка"
-    status_color = "success" if job_status == "SUCCESS" else "danger"
 
     message = (
         f"*Новый Pull Request #{pr_number}*\n\n"
